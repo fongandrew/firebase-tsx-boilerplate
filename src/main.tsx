@@ -9,5 +9,18 @@ const root = document.createElement("div");
 document.body.appendChild(root);
 
 ReactDOM.render(<div>
-  { Config.production ? "Prod" : "Dev" }
+  <button className="mui-btn mui-btn--primary">
+    { Config.production ? "Prod" : "Dev" }
+  </button>
+  <button className="mui-btn mui-btn--raised mui-btn--accent">Hello</button>
+  <button className="mui-btn mui-btn--flat mui-btn--accent">World</button>
+  <p>
+    Blargh
+  </p>
+  <p>
+    Text
+  </p>
+  <div>
+    World
+  </div>
 </div>, root);

@@ -1,3 +1,39 @@
-* + * {
-  margin-top: 10px;
-}
+// Tweak colors
+@import "~muicss/lib/sass/mui/colors";
+
+// customize MUI variables
+$mui-primary-color:             mui-color('indigo', '500');
+$mui-primary-color-dark:        mui-color('indigo', '700');
+$mui-primary-color-light:       mui-color('indigo', '100');
+
+$mui-accent-color:              mui-color('teal', '500');
+$mui-accent-color-dark:         mui-color('teal', '700');
+$mui-accent-color-light:        mui-color('teal', '100');
+
+// Core variables and mixins
+@import
+"~muicss/lib/sass/mui/variables",
+"~muicss/lib/sass/mui/mixins";
+
+// Globals
+@import
+"~muicss/lib/sass/mui/globals";
+
+// Components
+@import
+"~muicss/lib/sass/mui/appbar",
+"~muicss/lib/sass/mui/buttons",
+"~muicss/lib/sass/mui/checkbox-and-radio",
+"~muicss/lib/sass/mui/containers",
+"~muicss/lib/sass/mui/divider",
+"~muicss/lib/sass/mui/form",
+"~muicss/lib/sass/mui/panel",
+"~muicss/lib/sass/mui/select",
+"~muicss/lib/sass/mui/tabs",
+"~muicss/lib/sass/mui/textfield";
+
+// Miscellaneous
+@import
+"~muicss/lib/sass/mui/helpers",
+"~muicss/lib/sass/mui/ripple",
+"~muicss/lib/sass/mui/typography";
