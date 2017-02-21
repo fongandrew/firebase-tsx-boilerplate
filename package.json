@@ -1,5 +1,5 @@
 {
-  "name": "checkpoint",
+  "name": "firebase-tsx-boilerplate",
   "version": "0.1.0",
   "engines": {
     "node": ">= 6.0.0 < 7.0.0"
