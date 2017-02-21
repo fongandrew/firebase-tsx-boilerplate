@@ -2,3 +2,6 @@ node_modules
 dist
 public
 *.log
+.firebaserc
+firebase.json
+database.rules.json

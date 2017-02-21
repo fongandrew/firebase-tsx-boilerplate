@@ -1,26 +1,19 @@
 /*
   Entrypoint for Typescript
 */
-import * as Config from 'config';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as Config from 'config';
+import * as firebase from 'firebase';
 
-const root = document.createElement("div");
-document.body.appendChild(root);
+// Init firebase
+const app = firebase.initializeApp(Config.firebase);
+const database = app.database();
 
-ReactDOM.render(<div>
-  <button className="mui-btn mui-btn--primary">
-    { Config.production ? "Prod" : "Dev" }
-  </button>
-  <button className="mui-btn mui-btn--raised mui-btn--accent">Hello</button>
-  <button className="mui-btn mui-btn--flat mui-btn--accent">World</button>
-  <p>
-    Blargh
-  </p>
-  <p>
-    Text
-  </p>
-  <div>
-    World
-  </div>
-</div>, root);
+// Re-render everything when FB changes
+database.ref('/').on('value', (snapshot) => {
+  let val = snapshot ? snapshot.val() : null;
+  ReactDOM.render(<div>
+    { JSON.stringify(val) }
+  </div>, document.getElementById('root'));
+});
