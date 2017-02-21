@@ -20,7 +20,7 @@ let config = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     publicPath: "/",
     filename: 'js/[name]-[chunkhash].js',
     chunkFilename: 'js/[name]-[chunkhash].js'
@@ -90,8 +90,8 @@ let config = {
     }),
 
     new HtmlWebpackPlugin({
-      title: 'Andrew\'s Checkin App',
-      appMountId: "root"
+      template: './src/index.html',
+      inject: true
     })
   ]
 };
@@ -111,7 +111,7 @@ if (prodLike) {
 
 else {
   config.devServer = {
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(__dirname, "public"),
     port: 5000
   };
 }
