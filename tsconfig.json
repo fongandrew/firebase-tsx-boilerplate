@@ -15,7 +15,8 @@
     "target": "es5",
     "typeRoots" : ["./node_modules/@types", "./typings"],
     "jsx": "react",
-    "lib": ["dom", "es6"]
+    "lib": ["dom", "es6"],
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
