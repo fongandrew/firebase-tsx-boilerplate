@@ -112,7 +112,8 @@ if (prodLike) {
 else {
   config.devServer = {
     contentBase: path.join(__dirname, "public"),
-    port: 5000
+    port: 5000,
+    historyApiFallback: true
   };
 }
 

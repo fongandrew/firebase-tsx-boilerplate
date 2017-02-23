@@ -10,6 +10,7 @@
     "@types/chai": "^3.4.34",
     "@types/classnames": "0.0.32",
     "@types/enzyme": "^2.7.4",
+    "@types/history": "^4.5.0",
     "@types/jquery": "^2.0.39",
     "@types/lodash": "^4.14.47",
     "@types/mocha": "^2.2.35",
@@ -38,7 +39,7 @@
     "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
     "ts-node": "^2.0.0",
-    "typescript": "^2.1.4",
+    "typescript": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
   },
@@ -54,7 +55,7 @@
     "react-addons-shallow-compare": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-router": "^2.6.0",
+    "react-router-dom": "^4.0.0-beta.6",
     "redux": "^3.6.0"
   },
   "scripts": {
