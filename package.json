@@ -10,6 +10,7 @@
     "@types/chai": "^3.4.34",
     "@types/classnames": "0.0.32",
     "@types/enzyme": "^2.7.4",
+    "@types/eventemitter3": "^1.2.0",
     "@types/history": "^4.5.0",
     "@types/jquery": "^2.0.39",
     "@types/lodash": "^4.14.47",
@@ -46,6 +47,7 @@
   "dependencies": {
     "autoprefixer": "^6.6.1",
     "classnames": "^2.2.5",
+    "eventemitter3": "^2.0.2",
     "firebase": "^3.6.9",
     "jquery": "^3.1.0",
     "lodash": "^4.17.4",
