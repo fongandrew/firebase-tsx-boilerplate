@@ -86,7 +86,7 @@ declare module "react-router-dom" {
   interface RouteProps extends MatchOpts {
     path?: string;
     component?: ComponentClass<RouterContext>|StatelessComponent<RouterContext>;
-    render?: (props: RouterContext) => JSX.Element;
+    render?: StatelessComponent<RouterContext>;
     children?: (props: {
       match: Match|null,
       history: History
