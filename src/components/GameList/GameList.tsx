@@ -8,12 +8,14 @@ import { Link } from 'react-router-dom';
 import { view } from '../common/View';
 import { Deps } from "../../types";
 import * as T from "../../lib/data-types";
+import NewGame from "./NewGame";
 
 interface Props {
+  viewProps: Deps;
   games?: T.ListWrapper<T.Game>;
 }
 
-const GameList = ({ games }: Props) => {
+const GameList = ({ viewProps, games }: Props) => {
   if (! games) {
     return <div>
       Loading &hellip;
@@ -24,6 +26,7 @@ const GameList = ({ games }: Props) => {
     { _.map(games.data, ([id, game]) => <div key={id}>
       <Link to={`/game/${id}`}>{ game.name }</Link>
     </div>) }
+    <NewGame deps={viewProps} />
   </div>;
 }
 

@@ -6,13 +6,21 @@ export type ListItem<T> = fbEmit.ListItem<T>;
 
 export type Timestamp = number;
 
-export interface GamesQ {
+export interface GameQ { // One game
+  gameId: string;
+}
+
+export interface MostRecentGamesQ { // Most recent games
   limit?: number;
 }
 
 export interface Game {
   name: string;
   nLastUpdated: Timestamp; // Negative, sort most recent
+}
+
+export interface GameParams {
+  name: string;
 }
 
 export interface ScoresQ {
