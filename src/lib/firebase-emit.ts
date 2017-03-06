@@ -10,83 +10,86 @@
       callbacks (as we do with the ListEmitter) while still using the
       same interface.
   (3) We can create reusable typings on the data we expect from Firebase.
-
 */
 
 import * as _ from 'lodash';
 import { database } from 'firebase';
-import { EventEmitter } from 'eventemitter3';
 
-// Base class for our change emitters below
-const CHANGE_EVENT = "CHANGE_EVENT";
-export abstract class RefEmitter<T> extends EventEmitter {
-  // Last emit is undefined or a two-tuple (T can be undefined too)
-  lastEmit?: [true, T];
+/*
+  Wrapper object around something we get from our database. Wrapper is
+  necessary since it lets us distinguish between things like no response
+  vs. empty response, and lets us store additional metadata with what
+  we get back from the DB.
+*/
+export interface DataWrapper<T> {
+  data: T;
+  emittedOn: Date;
+}
 
-  // These are for generator functions below
-  generator?: Function;
-  props?: any;
+/*
+  Base class for our change emitters below. A RefEmitter class is a wrapper
+  around a Firebase ref we get from calling some function with a given set
+  of props. By capturing the function and the props we used to call the
+  function along with the resulting emitter, we can compare two emitter
+  instances to see if they're functionally equivalent (and thereby avoid
+  the overhead of re-binding to the underlying Firebase ref).
+*/
+export class RefEmitter<P, T> {
+  lastEmit?: DataWrapper<T>;
+  ref: database.Query;
 
-  constructor(public ref: database.Query) {
-    super();
+  // For simplicity, we only have a single callback function.
+  cb?: (t: DataWrapper<T>) => void;
+
+  constructor(public refFn: (p: P) => database.Query, public props: P) {
+    this.ref = refFn(props);
   }
 
-  // Used by view to check if emitters are equivalent -- saves us hassle
-  // of binding / unbinding umnecessarily
-  isEqual(emitter: RefEmitter<any>) {
-    return this.generator === emitter.generator &&
-      _.isEqual(this.props, emitter.props);
+  sameAs(other: RefEmitter<any, any>) {
+    return this.refFn === other.refFn &&
+      _.isEqual(this.props, other.props);
   }
 
-  abstract subscribeToRef(): void;
-
-  // Start ref listeners as soon as this emitter gets a change listener
-  onChange(cb: (t: T) => void) {
-    if (this.listeners.length === 1) {
-      this.subscribeToRef();
-    }
-
-    this.addListener(CHANGE_EVENT, cb);
+  onChange(cb: (t: DataWrapper<T>) => void) {
+    this.subscribeToRef();
+    this.cb = cb;
 
     // Bring new listeners up to date -- note null vs undefined distinction.
     // If this.lastEmit is null, that means emitChange was called.
     if (this.lastEmit) {
-      cb(this.lastEmit[1]);
+      cb(this.lastEmit);
     }
   }
 
-  offChange(cb?: (t: T|null) => void) {
-    if (cb) {
-      this.removeListener(CHANGE_EVENT, cb);
-    } else {
-      this.removeAllListeners(CHANGE_EVENT);
-    }
+  offChange() {
+    this.cb = undefined;
 
     /*
       Stop listening to our Firebase ref is this emitter is off -- but do
       it asynchronusly, so that Firebase doesn't kill its cache right away
-      in case we're re-subscribing to the same ref
+      in case we're re-subscribing in the same sequence.
     */
-    if (! this.listeners.length) {
-      window.requestAnimationFrame(() => this.ref.off());
-    }
+    window.requestAnimationFrame(() => {
+      if (! this.cb) this.ref.off();
+    });
   }
 
-  protected emitChange(t: T) {
-    this.emit(CHANGE_EVENT, t);
-    this.lastEmit = [true, t];
-  }
-}
-
-/*
-  Simple typable event emitter class we can wrap around a Firebase ref
-*/
-export class ObjectEmitter<T> extends RefEmitter<T> {
   subscribeToRef() {
     this.ref.off();
     this.ref.on("value",
-      (snapshot) => this.emitChange(snapshot ? snapshot.val() : null)
+      (snapshot) => this.emitChange(snapshot ? snapshot.val() : undefined)
     );
+  };
+
+  protected emitChange(t: T) {
+    let wrapper: DataWrapper<T> = {
+      data: t,
+      emittedOn: new Date()
+    };
+    if (this.cb) {
+      this.cb(wrapper);
+    }
+    this.lastEmit = wrapper;
   }
 }
 
@@ -97,9 +100,10 @@ export class ObjectEmitter<T> extends RefEmitter<T> {
 */
 
 // Use ListItem type rather than emit straight list to make keys visible.
-interface ListItem<T> { key: string, value: T };
+export type ListItem<T> = [string, T]; // First item is key
+export type ListWrapper<T> = DataWrapper<ListItem<T>[]>;
 
-export class ListEmitter<T> extends RefEmitter<ListItem<T>[]> {
+export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
   protected ready: boolean;
   protected state: ListItem<T>[]; // Temp mutable state
 
@@ -118,10 +122,9 @@ export class ListEmitter<T> extends RefEmitter<ListItem<T>[]> {
     this.ref.on("child_added", (snapshot, prevKey) => {
       if (snapshot) {
         let index = _.isString(prevKey) ? this.indexForKey(prevKey) + 1 : 0;
-        this.state.splice(index, 0, {
-          key: snapshot.key || "",
-          value: snapshot.val()
-        });
+        let val = snapshot.val();
+        val._key = snapshot.key;
+        this.state.splice(index, 0, this.getListItem(snapshot));
       }
       if (this.ready) this.emitChange(this.state);
     });
@@ -140,7 +143,7 @@ export class ListEmitter<T> extends RefEmitter<ListItem<T>[]> {
       if (snapshot) {
         let index = this.indexForKey(snapshot.key);
         if (index >= 0) {
-          this.state[index].value = snapshot.val();
+          this.state[index] = this.getListItem(snapshot);
         }
       }
       if (this.ready) this.emitChange(this.state);
@@ -156,10 +159,7 @@ export class ListEmitter<T> extends RefEmitter<ListItem<T>[]> {
 
         // Reinsert new child at prevKey index
         let newIndex = _.isString(prevKey) ? this.indexForKey(prevKey) + 1 : 0;
-        this.state.splice(newIndex, 0, {
-          key: snapshot.key || "",
-          value: snapshot.val()
-        });
+        this.state.splice(newIndex, 0, this.getListItem(snapshot));
       }
       if (this.ready) this.emitChange(this.state);
     });
@@ -172,34 +172,27 @@ export class ListEmitter<T> extends RefEmitter<ListItem<T>[]> {
     });
   }
 
+  protected getListItem(snapshot: database.DataSnapshot): ListItem<T> {
+    return [snapshot.key || "", snapshot.val()];
+  }
+
   protected indexForKey(key: string|null) {
     if (key) {
-      return _.findIndex(this.state, (s) => s.key === key)
+      return _.findIndex(this.state, (s) => s[0] === key)
     }
     return -1;
   }
 }
 
 /*
-  Transform function that generates Firebase ref into one that generates
-  one of the emitter classes above. Also adds on a name that we can use
-  to tell if two emitters are essentially equivalent (so we don't incur
-  overhead from unnecessary unbinding / rebinding when props change)
+  Helpers to let us create RefEmitter instances from functions rather
+  than invoking constructors.
 */
+
 export function asObject<P, T>(fn: (p: P) => database.Query) {
-  return function(props: P) {
-    let ret = new ObjectEmitter<T>(fn(props));
-    ret.generator = fn;
-    ret.props = props;
-    return ret;
-  }
+  return (p: P) => new RefEmitter<P, T>(fn, p);
 }
 
 export function asList<P, T>(fn: (p: P) => database.Query) {
-  return function(props: P) {
-    let ret = new ListEmitter<T>(fn(props));
-    ret.generator = fn;
-    ret.props = props;
-    return ret;
-  }
+  return (p: P) => new ListEmitter<P, T>(fn, p);
 }
