@@ -26,6 +26,25 @@ export class DataClient {
       .orderByChild("nValue")
       .limitToFirst(p.limit || this.DEFAULT_SCORES_LIMIT)
   );
+
+  addScore = (p: T.ScoreParams) => {
+    let scoreListRef = this.db.ref(`/scores/${p.gameId}`);
+    return scoreListRef.transaction(() => {
+      let scoreRef = scoreListRef.push();
+      let score: T.Score = {
+        username: p.username,
+        nValue: -p.value,
+        nCreatedOn: -Date.now()
+      };
+      scoreRef.set(score);
+
+      let gameRef = this.db.ref(`/games/${p.gameId}`);
+      let update: Partial<T.Game> = {
+        nLastUpdated: -Date.now()
+      };
+      gameRef.update(update);
+    });
+  }
 }
 
 export default DataClient;

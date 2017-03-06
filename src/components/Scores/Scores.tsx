@@ -4,9 +4,10 @@
 
 import * as _ from 'lodash';
 import * as React from 'react';
-import View from './View';
-import { Deps } from "../types";
-import * as T from "../lib/data-types";
+import View from '../common/View';
+import { Deps } from "../../types";
+import * as T from "../../lib/data-types";
+import NewScore from "./NewScore";
 
 interface Data {
   game: T.Game;
@@ -41,8 +42,10 @@ export class Scores extends View<Deps, Data> {
   renderScores(scores: T.ListWrapper<T.Score>) {
     return <div>
       { _.map(scores.data, ([id, score]) => <div key={id}>
-        { score.username } | { score.nValue }
+        { score.username } | { -score.nValue }
       </div>) }
+
+      <NewScore gameId={this.props.match.params.gameId} deps={this.props} />
     </div>;
   }
 }

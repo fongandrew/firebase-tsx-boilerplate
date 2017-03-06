@@ -5,8 +5,8 @@
 import * as React from 'react';
 import { Route, RouterContext } from 'react-router-dom';
 import { State, BaseDeps, Deps } from '../types';
-import GameList from "./GameList";
-import Scores from "./Scores";
+import GameList from "./GameList/GameList";
+import Scores from "./Scores/Scores";
 
 interface Props extends BaseDeps {
   initState: State;

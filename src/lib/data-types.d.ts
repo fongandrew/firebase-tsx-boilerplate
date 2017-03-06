@@ -12,7 +12,7 @@ export interface GamesQ {
 
 export interface Game {
   name: string;
-  nLastUpdated: TimeStamp; // Negative, sort most recent
+  nLastUpdated: Timestamp; // Negative, sort most recent
 }
 
 export interface ScoresQ {
@@ -23,5 +23,11 @@ export interface ScoresQ {
 export interface Score {
   username: string;
   nValue: number;         // Negative, sort highest
-  nCreatedOn: TimeStamp;  // Negative, sort most recent
+  nCreatedOn: Timestamp;  // Negative, sort most recent
+}
+
+export interface ScoreParams {
+  gameId: string;
+  username: string;
+  value: number;
 }

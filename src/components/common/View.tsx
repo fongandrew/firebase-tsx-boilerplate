@@ -3,7 +3,7 @@
   firebase-emit.ts
 */
 import * as React from 'react';
-import { RefEmitter, DataWrapper } from '../lib/firebase-emit';
+import { RefEmitter, DataWrapper } from '../../lib/firebase-emit';
 
 type State<S> = {
   [T in keyof S]?: DataWrapper<S[T]>;

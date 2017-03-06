@@ -5,9 +5,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { view } from './View';
-import { Deps } from "../types";
-import * as T from "../lib/data-types";
+import { view } from '../common/View';
+import { Deps } from "../../types";
+import * as T from "../../lib/data-types";
 
 interface Props {
   games?: T.ListWrapper<T.Game>;
