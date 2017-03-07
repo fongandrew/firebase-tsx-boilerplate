@@ -3,8 +3,9 @@
 */
 
 import * as React from 'react';
-import { Route, RouterContext } from 'react-router-dom';
+import { Route, RouterContext, Switch } from 'react-router-dom';
 import { State, BaseDeps, Deps } from '../types';
+import NotFound from "./common/NotFound";
 import GameList from "./GameList/GameList";
 import Scores from "./Scores/Scores";
 
@@ -20,8 +21,11 @@ export class App extends React.Component<Props, State> {
 
   render() {
     return <div className="mui-container">
-      <Route path="/" exact render={this.wrap(GameList)} />
-      <Route path="/game/:gameId" render={this.wrap(Scores)} />
+      <Switch>
+        <Route path="/" exact render={this.wrap(GameList)} />
+        <Route path="/game/:gameId" render={this.wrap(Scores)} />
+        <Route component={NotFound} />
+      </Switch>
     </div>;
   }
 
