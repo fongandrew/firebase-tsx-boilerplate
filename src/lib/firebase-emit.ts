@@ -33,12 +33,15 @@ export interface DataWrapper<T> {
   function along with the resulting emitter, we can compare two emitter
   instances to see if they're functionally equivalent (and thereby avoid
   the overhead of re-binding to the underlying Firebase ref).
+
+  Note that for simplicitly, a RefEmitter may have only a *single* callback
+  function. The assumption is that RefEmitters are programatically
+  (re-)generated when a React component receives props and are thus bound
+  to just that Component.
 */
 export class RefEmitter<P, T> {
   lastEmit?: DataWrapper<T>;
   ref: database.Query;
-
-  // For simplicity, we only have a single callback function.
   cb?: (t: DataWrapper<T>) => void;
 
   constructor(public refFn: (p: P) => database.Query, public props: P) {
@@ -50,7 +53,11 @@ export class RefEmitter<P, T> {
       _.isEqual(this.props, other.props);
   }
 
-  onChange(cb: (t: DataWrapper<T>) => void) {
+  onChange(cb: (t: DataWrapper<T>) => void, replace=false) {
+    // Don't replace existing callback unless explicit -- this helps us
+    // us avoid unnecessary rebinding.
+    if (this.cb && !replace) return;
+
     this.subscribeToRef();
     this.cb = cb;
 

@@ -8,30 +8,31 @@ import { Link } from 'react-router-dom';
 import { view } from '../common/View';
 import { Deps } from "../../types";
 import * as T from "../../lib/data-types";
+import Loading from "../common/Loading";
 import NewGame from "./NewGame";
 
 interface Props {
-  viewProps: Deps;
+  deps: Deps;
   games?: T.ListWrapper<T.Game>;
 }
 
-const GameList = ({ viewProps, games }: Props) => {
+const GameList = ({ deps, games }: Props) => {
   if (! games) {
-    return <div>
-      Loading &hellip;
-    </div>;
+    return <Loading />;
   }
 
   return <div>
     { _.map(games.data, ([id, game]) => <div key={id}>
       <Link to={`/game/${id}`}>{ game.name }</Link>
     </div>) }
-    <NewGame deps={viewProps} />
+    <NewGame deps={deps} />
   </div>;
 }
 
-const Container = view((p: Deps) => ({
-  games: p.dataClient.getMostRecentGames({})
-}))(GameList);
+const Container = view({
+  getEmitters: (d: Deps, p?: {}) => ({
+    games: d.dataClient.getMostRecentGames({})
+  })
+})(GameList);
 
 export default Container;

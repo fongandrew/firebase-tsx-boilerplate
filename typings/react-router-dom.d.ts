@@ -61,7 +61,7 @@ declare module "react-router-dom" {
   export const MemoryRouter: ComponentClass<MemoryRouterProps>;
 
   export interface Match {
-    params: {[index: string]: string};
+    params: {[index: string]: string|undefined};
     isExact: boolean;
     path: string;
     url: string;
