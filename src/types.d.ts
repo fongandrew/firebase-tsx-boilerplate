@@ -2,10 +2,9 @@
   Some common types for our app
 */
 import * as Config from 'config';
-import { database } from 'firebase';
 import { History } from 'history';
 import { Match } from 'react-router-dom';
-import DataClient from './lib/data-client';
+import DataClient from './data/client';
 
 /*
   The global state (if we have any -- with firebase and decent routing,
@@ -19,13 +18,16 @@ export interface State {}
   store a la Flux or Redux, we should pass along that component's bound
   setState function as an alternative to the dispatch function.
 */
-export function setStateFn<K extends keyof State>(
-  f: (prevState: S, props: P) => Pick<S, K>,
-  callback?: () => any
-): void;
-export function setStateFn<K extends keyof State>(
-  state: Pick<S, K>, callback?: () => any
-): void;
+export interface SetStateFn {
+  <K extends keyof State>(
+    f: (prevState: State, props: BaseDeps) => Pick<State, K>,
+    callback?: () => any
+  ): void;
+  <K extends keyof State>(
+    state: Pick<State, K>,
+    callback?: () => any
+  ): void;
+}
 
 /*
   We follow a dependency-injection pattern. This is fancy talk for
@@ -43,6 +45,6 @@ export interface Deps extends BaseDeps {
   history: History;
   match: Match;
   appState: State;
-  setAppState: typeof setStateFn;
+  setAppState: SetStateFn;
 }
 

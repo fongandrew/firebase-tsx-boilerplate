@@ -9,7 +9,7 @@ import {
 import * as Config from 'config';
 import * as firebase from 'firebase';
 import App from "./components/App";
-import DataClient from "./lib/data-client";
+import DataClient from "./data/client";
 
 // Init firebase
 const app = firebase.initializeApp(Config.firebase);

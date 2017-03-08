@@ -4,11 +4,11 @@
 
 import * as _ from 'lodash';
 import * as React from 'react';
-import View from "../common/View";
+import * as T from "../../data/types";
 import { Deps } from "../../types";
-import * as T from "../../lib/data-types";
 import Loading from "../common/Loading";
 import NotFound from "../common/NotFound";
+import View from "../common/View";
 import NewScore from "./NewScore";
 
 interface Data {

@@ -5,10 +5,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { view } from '../common/View';
+import * as T from "../../data/types";
 import { Deps } from "../../types";
-import * as T from "../../lib/data-types";
 import Loading from "../common/Loading";
+import { view } from '../common/View';
 import NewGame from "./NewGame";
 
 interface Props {
