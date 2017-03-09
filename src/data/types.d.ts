@@ -2,7 +2,7 @@
   Types for our data-client classes / mixins
 */
 
-import { database } from 'firebase';
+import { database } from "firebase";
 export type Client = new (...args: any[]) => object & {
   db: database.Database;
 };

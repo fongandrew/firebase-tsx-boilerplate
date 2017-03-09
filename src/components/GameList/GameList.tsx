@@ -2,13 +2,13 @@
   List of games we're tracking scores for
 */
 
-import * as _ from 'lodash';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import * as _ from "lodash";
+import * as React from "react";
+import { Link } from "react-router-dom";
 import * as T from "../../data/types";
 import { Deps } from "../../types";
 import Loading from "../common/Loading";
-import { view } from '../common/View';
+import { view } from "../common/View";
 import NewGame from "./NewGame";
 
 interface Props {

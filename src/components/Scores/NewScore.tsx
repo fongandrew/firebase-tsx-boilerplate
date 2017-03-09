@@ -1,7 +1,7 @@
 /*
   Form to enter a new score
 */
-import * as React from 'react';
+import * as React from "react";
 import { Deps } from "../../types";
 
 interface Props {

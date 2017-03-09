@@ -2,9 +2,9 @@
   Abstract component to hook up to Firebase emitters in firebase-emit.ts
   and parse
 */
-import * as React from 'react';
-import { Deps } from '../../types';
-import { RefEmitter, DataWrapper } from '../../lib/firebase-emit';
+import * as React from "react";
+import { Deps } from "../../types";
+import { RefEmitter, DataWrapper } from "../../lib/firebase-emit";
 
 type State<S> = {
   [T in keyof S]?: DataWrapper<S[T]>;

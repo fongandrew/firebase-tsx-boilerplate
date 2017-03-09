@@ -2,8 +2,8 @@
   Our high scores
 */
 
-import * as _ from 'lodash';
-import * as React from 'react';
+import * as _ from "lodash";
+import * as React from "react";
 import * as T from "../../data/types";
 import { Deps } from "../../types";
 import Loading from "../common/Loading";
