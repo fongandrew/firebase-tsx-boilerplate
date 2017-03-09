@@ -64,6 +64,6 @@
     "firebase": "firebase",
     "prod": "npm run clean && cross-env NODE_ENV=production webpack",
     "watch": "webpack-dev-server",
-    "test": "mocha --recursive --reporter spec --bail --require ./test-init.ts --compilers ts:ts-node/register,tsx:ts-node/register src/**/*.test.*"
+    "test": "mocha --recursive --reporter spec --bail --require ./test-init.js src/**/*.test.*"
   }
 }
