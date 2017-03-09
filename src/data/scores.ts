@@ -25,8 +25,9 @@ export const scores = <C extends T.Client>(Cls: C) => class extends Cls {
   DEFAULT_SCORES_LIMIT = 10;
   getTopScoresForGame = asList<T.ScoresQ, T.Score>(
     (p) => this.db.ref(Refs.scores(p))
-      .orderByChild("nValue")
-      .limitToFirst(p.limit || this.DEFAULT_SCORES_LIMIT)
+      .orderByChild("value")
+      .limitToLast(p.limit || this.DEFAULT_SCORES_LIMIT),
+    { reverse: true }
   );
 
   /*
@@ -38,14 +39,14 @@ export const scores = <C extends T.Client>(Cls: C) => class extends Cls {
       let scoreRef = scoreListRef.push();
       let score: T.Score = {
         username: p.username,
-        nValue: -p.value,
-        nCreatedOn: -Date.now()
+        value: p.value,
+        createdOn: Date.now()
       };
       scoreRef.set(score);
 
       let gameRef = this.db.ref(Games.Refs.game(p));
       let update: Partial<T.Game> = {
-        nLastUpdated: -Date.now()
+        lastUpdated: Date.now()
       };
       gameRef.update(update);
     });

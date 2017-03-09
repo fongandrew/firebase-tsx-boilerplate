@@ -32,8 +32,9 @@ export const games = <C extends T.Client>(Cls: C) => class extends Cls {
   DEFAULT_RECENT_GAMES_LIMIT = 10;
   getMostRecentGames = asList<T.MostRecentGamesQ, T.Game>(
     (p) => this.db.ref(Refs.games())
-      .orderByChild("nLastUpdated")
-      .limitToFirst(p.limit || this.DEFAULT_RECENT_GAMES_LIMIT)
+      .orderByChild("lastUpdated")
+      .limitToLast(p.limit || this.DEFAULT_RECENT_GAMES_LIMIT),
+    { reverse: true }
   );
 
   /*
@@ -43,7 +44,7 @@ export const games = <C extends T.Client>(Cls: C) => class extends Cls {
     let gameRef = this.db.ref(Refs.games()).push();
     let game: T.Game = {
       ...p,
-      nLastUpdated: -Date.now()
+      lastUpdated: Date.now()
     };
     gameRef.set(game);
   };

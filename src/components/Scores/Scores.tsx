@@ -54,7 +54,7 @@ export class Scores extends View<T.GameQ, Data> {
   renderScores(scores: T.ListWrapper<T.Score>, gameId: string) {
     return <div>
       { _.map(scores.data, ([id, score]) => <div key={id}>
-        { score.username } | { -score.nValue }
+        { score.username } | { score.value }
       </div>) }
 
       <NewScore gameId={gameId} deps={this.props} />

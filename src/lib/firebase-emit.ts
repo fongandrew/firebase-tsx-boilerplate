@@ -109,10 +109,23 @@ export class RefEmitter<P, T> {
 // Use ListItem type rather than emit straight list to make keys visible.
 export type ListItem<T> = [string, T]; // First item is key
 export type ListWrapper<T> = DataWrapper<ListItem<T>[]>;
+export type ListEmitterOpts = {
+  reverse?: boolean; /* Emit list in reversed order (to get around Firebase
+                       allowing "fetch last N results" but not allowing
+                       descending sort). */
+}
 
 export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
   protected ready: boolean;
   protected state: ListItem<T>[]; // Temp mutable state
+
+  constructor(
+    refFn: (p: P) => database.Query,
+    props: P,
+    public opts:ListEmitterOpts = {}
+  ) {
+    super(refFn, props);
+  }
 
   subscribeToRef() {
     // Reset when (re-)subscribing
@@ -179,6 +192,12 @@ export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
     });
   }
 
+  protected emitChange(t: ListItem<T>[]) {
+    t = _.clone(t); // Clone list to avoid mutability issues
+    t = this.opts.reverse ? t.reverse() : t;
+    super.emitChange(t);
+  }
+
   protected getListItem(snapshot: database.DataSnapshot): ListItem<T> {
     return [snapshot.key || "", snapshot.val()];
   }
@@ -200,6 +219,9 @@ export function asObject<P, T>(fn: (p: P) => database.Query) {
   return (p: P) => new RefEmitter<P, T>(fn, p);
 }
 
-export function asList<P, T>(fn: (p: P) => database.Query) {
-  return (p: P) => new ListEmitter<P, T>(fn, p);
+export function asList<P, T>(
+  fn: (p: P) => database.Query,
+  opts: ListEmitterOpts = {}
+) {
+  return (p: P) => new ListEmitter<P, T>(fn, p, opts);
 }
