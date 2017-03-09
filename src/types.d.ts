@@ -1,10 +1,10 @@
 /*
   Some common types for our app
 */
-import * as Config from 'config';
-import { History } from 'history';
-import { Match } from 'react-router-dom';
-import DataClient from './data/client';
+import * as Config from "config";
+import { History } from "history";
+import { Match } from "react-router-dom";
+import DataClient from "./data/client";
 
 /*
   The global state (if we have any -- with firebase and decent routing,

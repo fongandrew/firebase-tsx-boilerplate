@@ -12,8 +12,8 @@
   (3) We can create reusable typings on the data we expect from Firebase.
 */
 
-import * as _ from 'lodash';
-import { database } from 'firebase';
+import * as _ from "lodash";
+import { database } from "firebase";
 
 /*
   Wrapper object around something we get from our database. Wrapper is
@@ -53,7 +53,7 @@ export class RefEmitter<P, T> {
       _.isEqual(this.props, other.props);
   }
 
-  onChange(cb: (t: DataWrapper<T>) => void, replace=false) {
+  onChange(cb: (t: DataWrapper<T>) => void, replace = false) {
     // Don't replace existing callback unless explicit -- this helps us
     // us avoid unnecessary rebinding.
     if (this.cb && !replace) return;
@@ -113,7 +113,7 @@ export type ListEmitterOpts = {
   reverse?: boolean; /* Emit list in reversed order (to get around Firebase
                        allowing "fetch last N results" but not allowing
                        descending sort). */
-}
+};
 
 export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
   protected ready: boolean;
@@ -122,7 +122,7 @@ export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
   constructor(
     refFn: (p: P) => database.Query,
     props: P,
-    public opts:ListEmitterOpts = {}
+    public opts: ListEmitterOpts = {}
   ) {
     super(refFn, props);
   }
@@ -204,7 +204,7 @@ export class ListEmitter<P, T> extends RefEmitter<P, ListItem<T>[]> {
 
   protected indexForKey(key: string|null) {
     if (key) {
-      return _.findIndex(this.state, (s) => s[0] === key)
+      return _.findIndex(this.state, (s) => s[0] === key);
     }
     return -1;
   }

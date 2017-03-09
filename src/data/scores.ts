@@ -50,7 +50,7 @@ export const scores = <C extends T.Client>(Cls: C) => class extends Cls {
       };
       gameRef.update(update);
     });
-  };
-}
+  }
+};
 
 export default scores;

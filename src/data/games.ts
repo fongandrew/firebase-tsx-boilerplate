@@ -47,7 +47,7 @@ export const games = <C extends T.Client>(Cls: C) => class extends Cls {
       lastUpdated: Date.now()
     };
     gameRef.set(game);
-  };
+  }
 };
 
 export default games;

@@ -39,6 +39,7 @@
     "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
     "ts-node": "^2.0.0",
+    "tslint": "^4.5.1",
     "typescript": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
@@ -62,6 +63,7 @@
     "build": "npm run clean && webpack",
     "clean": "rimraf public",
     "firebase": "firebase",
+    "lint": "tslint src/**/*.ts",
     "prod": "npm run clean && cross-env NODE_ENV=production webpack",
     "watch": "webpack-dev-server",
     "test": "mocha --recursive --reporter spec --bail --require ./test-init.js src/**/*.test.*"
